@@ -28,8 +28,8 @@ print(dfmax)
 normalized_df = (df - df.min())/(df.max() - df.min())
 print(normalized_df)
 array = normalized_df.values
-X = array[:, (0, 1, 2)] #coloanele de input
-y = array[:, 3].reshape(-1, 1) #coloanele de output
+X = array[150:, (0, 1, 2)] #cate randuri vrei sa iei (pt train + validare) : coloanele de input
+y = array[150:, 3].reshape(-1, 1) #cate randuri vrei sa iei (pt train + validare) : coloanele de input
 print(X.shape)
 X_train = X[:100]
 X_validation = X[50:]
