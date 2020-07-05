@@ -2,17 +2,14 @@
 import numpy as np
 from pandas import read_csv
 import pandas as pd
-from keras.models import Sequential
 from keras.layers import Input, Dense
 from keras.models import Model
 from keras.initializers import VarianceScaling
 from keras.optimizers import SGD
 from keras.layers import Layer, InputSpec
 import keras.backend as K
-import tensorflow as tf
-from sklearn.preprocessing import MinMaxScaler
 from sklearn.cluster import KMeans
-from sklearn.metrics import silhouette_samples, silhouette_score
+from sklearn.metrics import silhouette_score
 
 # Load dataset
 url = "https://raw.githubusercontent.com/lauradiosan/AI-2019-2020/master/exam/5/wine.csv"
@@ -26,18 +23,15 @@ dfmax = df.max()
 normalized_df = (df - df.min())/(df.max() - df.min())
 array = normalized_df.values
 
-
-#for num_clusters in range(2,10): daca nu stii cate clustere ar trebuii
+#for num_clusters in range(2,10): #daca nu stii cate clustere ar trebuii
 #    clusterer = KMeans(n_clusters=num_clusters, n_jobs=4)
 #    preds = clusterer.fit_predict(array)
-#    # centers = clusterer.cluster_centers_
 #    score = silhouette_score (array, preds, metric='euclidean')
 #    print ("For n_clusters = {}, Kmeans silhouette score is {})".format(num_clusters, score))
 
 n_clusters = 5
 kmeans = KMeans(n_clusters=n_clusters, n_jobs=4)
 y_pred_kmeans = kmeans.fit_predict(array)
-
 
 def autoencoder(dims, act='relu', init='glorot_uniform'):
     n_stacks = len(dims) - 1
@@ -72,7 +66,7 @@ init = VarianceScaling(scale=1. / 3., mode='fan_in',
 pretrain_optimizer = SGD(lr=1, momentum=0.9)
 pretrain_epochs = n_epochs
 batch_size = batch_size
-save_dir = './results'
+save_dir = './resultsB' #sa modifici pt C
 autoencoder, encoder = autoencoder(dims, init=init)
 
 autoencoder.compile(optimizer=pretrain_optimizer, loss='mse')
@@ -80,7 +74,6 @@ autoencoder.fit(array, array, batch_size=batch_size, epochs=pretrain_epochs)
 
 autoencoder.save_weights(save_dir + '/ae_weights.h5')
 autoencoder.load_weights(save_dir + '/ae_weights.h5')
-
 
 class ClusteringLayer(Layer):
     def __init__(self, n_clusters, weights=None, alpha=1.0, **kwargs):
@@ -183,7 +176,6 @@ for ite in range(int(maxiter)):
 
 model.save_weights(save_dir + '/b_DEC_model_final.h5')
 model.load_weights(save_dir + '/b_DEC_model_final.h5')
-
 
 #B
 info = [(8.1 - dfmin["fixed acidity"])/(dfmax["fixed acidity"] - dfmin["fixed acidity"]),
