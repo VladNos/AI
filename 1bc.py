@@ -4,6 +4,7 @@ from pandas import read_csv
 import pandas as pd
 from keras.models import Sequential
 from keras.layers import Dense
+import math
 
 # Load dataset
 url = "https://raw.githubusercontent.com/lauradiosan/AI-2019-2020/master/exam/1/homeData.csv"
@@ -36,22 +37,22 @@ model.add(Dense(1, activation='linear'))
 # compile the keras model
 #la loss ai de ales intre mean_absolute_error, mean_squared_logarithmic_error si mean_squared_error
 #la optimiser ii adam, SGD, adadelta, NAG, momentum
-model.compile(loss='mse', optimizer='adam', metrics=['accuracy'])
+model.compile(loss='mean_squared_error', optimizer='SGD', metrics=['accuracy'])
 
 # fit the keras model on the dataset
-model.fit(X_train, Y_train, epochs=32, batch_size=16)
+model.fit(X_train, Y_train, epochs=100, batch_size=8)
 
 # evaluate the keras model
 loss, accuracy = model.evaluate(X_validation, Y_validation)
-print("average Loss: " + loss)
+print(math.sqrt(loss)* (dfmax.price - dfmin.price) + dfmin.price)
 print('Accuracy: %.2f' % (accuracy*100))
 
 #C
 info = [(3 - dfmin.bedrooms)/(dfmax.bedrooms - dfmin.bedrooms),
-        (2.5 - dfmin.bathrooms)/(dfmax.bathrooms - dfmin.bathrooms),
-        (1910 - dfmin.sqft_living)/(dfmax.sqft_living - dfmin.sqft_living),
-        (66210 - dfmin.sqft_lot)/(dfmax.sqft_lot - dfmin.sqft_lot),
-        (3 - dfmin.floors)/(dfmax.floors - dfmin.floors)]
+        (1 - dfmin.bathrooms)/(dfmax.bathrooms - dfmin.bathrooms),
+        (1780 - dfmin.sqft_living)/(dfmax.sqft_living - dfmin.sqft_living),
+        (7460 - dfmin.sqft_lot)/(dfmax.sqft_lot - dfmin.sqft_lot),
+        (1 - dfmin.floors)/(dfmax.floors - dfmin.floors)]
 aux = np.asarray(info)
 aux = aux.reshape(1, 5) #daca da eroare, tre sa fie invers fata de cum zice ca trebe sa fie, nu intreba :))
 
